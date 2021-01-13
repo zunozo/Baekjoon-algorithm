@@ -1,0 +1,50 @@
+import heapq
+T=int(input())
+INF=99999999
+for _ in range(T):
+    n,m,t=map(int,input().split()) #교차로, 도로, 목적지 후보의개수
+    s,g,h=map(int,input().split()) #예술가들의 출발지 g!=h
+    Graph=[[] for _ in range(n+1)]
+    x=[]
+    for _ in range(m):
+        a,b,d = map(int,input().split())
+        Graph[a].append((b,d))
+        Graph[b].append((a,d))
+        if (a==g and b==h) or (b==g and a==h):
+            prev_dis=d
+    def dijkstra(s):
+        distance=[INF for _ in range(n+1)]
+        distance[s]=0
+        queue=[]
+        heapq.heappush(queue,(0,s))
+        while queue:
+            dist,node=heapq.heappop(queue)
+            if dist > distance[node]:
+                continue
+            for i in Graph[node]:
+                cost = i[1]+dist
+                if cost < distance[i[0]]:
+                    distance[i[0]]=cost
+                    heapq.heappush(queue,(cost,i[0]))
+        return distance
+    distance=dijkstra(s)
+    for _ in range(t):
+        temp=int(input())
+        x.append([temp,distance[temp]])
+    if distance[g] < distance[h]:
+        end=h
+        prev_dis+=distance[g]
+    else:
+        end=g
+        prev_dis+=distance[h]
+    answer=[]
+    distance=dijkstra(end)
+    for i in x:
+        if prev_dis+distance[i[0]]==i[1]:
+            answer.append(i[0])
+    answer.sort()
+    for i in range(len(answer)):
+        if i==len(answer)-1:
+            print(answer[i])
+        else:
+            print(answer[i],end=' ')
