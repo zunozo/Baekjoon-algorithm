@@ -1,0 +1,24 @@
+m,n = map(int,input().split())
+G=[]
+for _ in range(n):
+    k=list(map(int,input().split()))
+    G.append(k)
+queue=[]
+for i in range(n):
+    for j in range(m):
+        if G[i][j]:
+            queue.append((i,j,0))
+day=0
+def bfs():
+    global queue,G,day
+    while queue:
+        i,j,count=queue.pop()
+        if day<count:
+            day=count
+        for di,dj in ((1,0),(-1,0),(0,1),(0,-1)):
+            if G[i+di][j+dj]==0: #방문하지않았다면
+                G[i+di][j+dj]=1
+                queue.append((i+di,j+dj,count+1))
+
+bfs()
+print(G)
